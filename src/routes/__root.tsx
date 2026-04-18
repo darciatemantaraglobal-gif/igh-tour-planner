@@ -1,6 +1,6 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, Scripts } from "@tanstack/react-router";
 
-import appCss from "../styles.css?url";
+import "../styles.css";
 
 function NotFoundComponent() {
   return (
@@ -25,24 +25,27 @@ function NotFoundComponent() {
 }
 
 export const Route = createRootRoute({
+  ssr: false,
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "IGH Tour — Premium Umrah Bintang 5 Calculator & Manifest" },
+      {
+        name: "description",
+        content:
+          "Platform resmi IGH Tour untuk kelola paket Umrah premium Bintang 5: tiered pricing calculator, manifest jamaah, dan PDF quotation otomatis.",
+      },
+      { name: "author", content: "IGH Tour" },
+      { property: "og:title", content: "IGH Tour Admin Platform" },
+      {
+        property: "og:description",
+        content:
+          "Pilihanmu untuk menjelajah Timur Tengah. Calculator LA, manifest jamaah, dan quotation PDF dalam satu dashboard premium.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { name: "twitter:site", content: "@IGHTour" },
     ],
   }),
   shellComponent: RootShell,
@@ -52,11 +55,20 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <HeadContent />
+    <html lang="en" suppressHydrationWarning>
+      <head suppressHydrationWarning>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>IGH Tour — Premium Umrah Bintang 5 Calculator & Manifest</title>
+        <meta
+          name="description"
+          content="Platform resmi IGH Tour untuk kelola paket Umrah premium Bintang 5: tiered pricing calculator, manifest jamaah, dan PDF quotation otomatis."
+        />
+        {import.meta.env.DEV ? (
+          <script src="/__replco/static/devtools/injected.js" suppressHydrationWarning />
+        ) : null}
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Scripts />
       </body>
