@@ -121,8 +121,19 @@ function GroupDetailPage() {
     load();
   };
 
+  type JamaahStatus =
+    | "registered"
+    | "document_uploaded"
+    | "visa_processing"
+    | "visa_approved"
+    | "ready_for_departure"
+    | "departed";
+
   const handleStatusChange = async (id: string, status: string) => {
-    const { error } = await supabase.from("jamaah").update({ status }).eq("id", id);
+    const { error } = await supabase
+      .from("jamaah")
+      .update({ status: status as JamaahStatus })
+      .eq("id", id);
     if (error) return toast.error(error.message);
     load();
   };
