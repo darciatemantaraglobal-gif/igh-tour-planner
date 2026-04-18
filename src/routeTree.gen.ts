@@ -9,11 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QuotationsRouteImport } from './routes/quotations'
+import { Route as ManifestRouteImport } from './routes/manifest'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ManifestGroupIdRouteImport } from './routes/manifest.$groupId'
 
+const QuotationsRoute = QuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManifestRoute = ManifestRouteImport.update({
+  id: '/manifest',
+  path: '/manifest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -34,18 +47,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManifestGroupIdRoute = ManifestGroupIdRouteImport.update({
+  id: '/$groupId',
+  path: '/$groupId',
+  getParentRoute: () => ManifestRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calculator': typeof CalculatorRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/manifest': typeof ManifestRouteWithChildren
+  '/quotations': typeof QuotationsRoute
+  '/manifest/$groupId': typeof ManifestGroupIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calculator': typeof CalculatorRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/manifest': typeof ManifestRouteWithChildren
+  '/quotations': typeof QuotationsRoute
+  '/manifest/$groupId': typeof ManifestGroupIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +77,38 @@ export interface FileRoutesById {
   '/calculator': typeof CalculatorRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/manifest': typeof ManifestRouteWithChildren
+  '/quotations': typeof QuotationsRoute
+  '/manifest/$groupId': typeof ManifestGroupIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calculator' | '/dashboard' | '/login'
+  fullPaths:
+    | '/'
+    | '/calculator'
+    | '/dashboard'
+    | '/login'
+    | '/manifest'
+    | '/quotations'
+    | '/manifest/$groupId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calculator' | '/dashboard' | '/login'
-  id: '__root__' | '/' | '/calculator' | '/dashboard' | '/login'
+  to:
+    | '/'
+    | '/calculator'
+    | '/dashboard'
+    | '/login'
+    | '/manifest'
+    | '/quotations'
+    | '/manifest/$groupId'
+  id:
+    | '__root__'
+    | '/'
+    | '/calculator'
+    | '/dashboard'
+    | '/login'
+    | '/manifest'
+    | '/quotations'
+    | '/manifest/$groupId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +116,26 @@ export interface RootRouteChildren {
   CalculatorRoute: typeof CalculatorRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  ManifestRoute: typeof ManifestRouteWithChildren
+  QuotationsRoute: typeof QuotationsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/quotations': {
+      id: '/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof QuotationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manifest': {
+      id: '/manifest'
+      path: '/manifest'
+      fullPath: '/manifest'
+      preLoaderRoute: typeof ManifestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -99,15 +164,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manifest/$groupId': {
+      id: '/manifest/$groupId'
+      path: '/$groupId'
+      fullPath: '/manifest/$groupId'
+      preLoaderRoute: typeof ManifestGroupIdRouteImport
+      parentRoute: typeof ManifestRoute
+    }
   }
 }
+
+interface ManifestRouteChildren {
+  ManifestGroupIdRoute: typeof ManifestGroupIdRoute
+}
+
+const ManifestRouteChildren: ManifestRouteChildren = {
+  ManifestGroupIdRoute: ManifestGroupIdRoute,
+}
+
+const ManifestRouteWithChildren = ManifestRoute._addFileChildren(
+  ManifestRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalculatorRoute: CalculatorRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  ManifestRoute: ManifestRouteWithChildren,
+  QuotationsRoute: QuotationsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
