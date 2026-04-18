@@ -14,16 +14,276 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      groups: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          departure_month: string
+          hotel_madinah: string | null
+          hotel_makkah: string | null
+          id: string
+          name: string
+          notes: string | null
+          pax_target: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          departure_month: string
+          hotel_madinah?: string | null
+          hotel_makkah?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          pax_target?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          departure_month?: string
+          hotel_madinah?: string | null
+          hotel_makkah?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          pax_target?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      jamaah: {
+        Row: {
+          created_at: string
+          date_of_birth: string | null
+          full_name: string
+          gender: string | null
+          group_id: string
+          id: string
+          notes: string | null
+          passport_expiry: string | null
+          passport_number: string | null
+          phone: string | null
+          room_type: Database["public"]["Enums"]["room_type"] | null
+          status: Database["public"]["Enums"]["jamaah_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth?: string | null
+          full_name: string
+          gender?: string | null
+          group_id: string
+          id?: string
+          notes?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
+          phone?: string | null
+          room_type?: Database["public"]["Enums"]["room_type"] | null
+          status?: Database["public"]["Enums"]["jamaah_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string | null
+          full_name?: string
+          gender?: string | null
+          group_id?: string
+          id?: string
+          notes?: string | null
+          passport_expiry?: string | null
+          passport_number?: string | null
+          phone?: string | null
+          room_type?: Database["public"]["Enums"]["room_type"] | null
+          status?: Database["public"]["Enums"]["jamaah_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jamaah_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jamaah_documents: {
+        Row: {
+          document_type: Database["public"]["Enums"]["document_type"]
+          file_name: string
+          file_path: string
+          id: string
+          jamaah_id: string
+          mime_type: string | null
+          uploaded_at: string
+        }
+        Insert: {
+          document_type: Database["public"]["Enums"]["document_type"]
+          file_name: string
+          file_path: string
+          id?: string
+          jamaah_id: string
+          mime_type?: string | null
+          uploaded_at?: string
+        }
+        Update: {
+          document_type?: Database["public"]["Enums"]["document_type"]
+          file_name?: string
+          file_path?: string
+          id?: string
+          jamaah_id?: string
+          mime_type?: string | null
+          uploaded_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jamaah_documents_jamaah_id_fkey"
+            columns: ["jamaah_id"]
+            isOneToOne: false
+            referencedRelation: "jamaah"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quotations: {
+        Row: {
+          additional_services: Json | null
+          client_name: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          double_price: number | null
+          exclusions: Json | null
+          fx_rate: number | null
+          group_id: string | null
+          hotel_madinah: string | null
+          hotel_makkah: string | null
+          id: string
+          inclusions: Json | null
+          notes: string | null
+          pax: number
+          quad_price: number | null
+          triple_price: number | null
+        }
+        Insert: {
+          additional_services?: Json | null
+          client_name: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          double_price?: number | null
+          exclusions?: Json | null
+          fx_rate?: number | null
+          group_id?: string | null
+          hotel_madinah?: string | null
+          hotel_makkah?: string | null
+          id?: string
+          inclusions?: Json | null
+          notes?: string | null
+          pax: number
+          quad_price?: number | null
+          triple_price?: number | null
+        }
+        Update: {
+          additional_services?: Json | null
+          client_name?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          double_price?: number | null
+          exclusions?: Json | null
+          fx_rate?: number | null
+          group_id?: string | null
+          hotel_madinah?: string | null
+          hotel_makkah?: string | null
+          id?: string
+          inclusions?: Json | null
+          notes?: string | null
+          pax?: number
+          quad_price?: number | null
+          triple_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotations_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "staff"
+      document_type: "passport" | "photo" | "visa" | "ticket" | "other"
+      jamaah_status:
+        | "registered"
+        | "document_uploaded"
+        | "visa_processing"
+        | "visa_approved"
+        | "ready_for_departure"
+        | "departed"
+      room_type: "quad" | "triple" | "double"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +410,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "staff"],
+      document_type: ["passport", "photo", "visa", "ticket", "other"],
+      jamaah_status: [
+        "registered",
+        "document_uploaded",
+        "visa_processing",
+        "visa_approved",
+        "ready_for_departure",
+        "departed",
+      ],
+      room_type: ["quad", "triple", "double"],
+    },
   },
 } as const
